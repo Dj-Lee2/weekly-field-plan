@@ -1,0 +1,10 @@
+*
+!Dockerfile
+!lib/
+!lib/**
+!server.mjs
+!package.json
+!dist/
+!dist/**
+!tests/
+!tests/**

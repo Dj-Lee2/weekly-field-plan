@@ -1,0 +1,16 @@
+import {build} from 'esbuild';
+import {mkdir,readFile,writeFile,cp} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {execFileSync} from 'node:child_process';
+await mkdir('dist-demo/assets',{recursive:true});
+await build({entryPoints:['src/main.jsx'],bundle:true,outdir:'dist-demo/assets',platform:'browser',target:['chrome109','safari15.4'],minify:true,jsx:'automatic',define:{'process.env.NODE_ENV':JSON.stringify('production')},external:['/fonts/*'],logLevel:'info',plugins:[{name:'ephemeral-demo-only',setup(b){b.onResolve({filter:/\/store\.mjs$/},()=>({path:resolve('src/demo-store.mjs')}));}}]});
+await cp('public/fonts','dist-demo/fonts',{recursive:true});
+let html=await readFile('index.html','utf8');
+html=html.replace('작동 초안','공개 시연').replace('/src/main.jsx','/assets/main.js').replace('</head>','<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/assets/main.css"></head>');
+const revision=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+html=html.replace('</head>',`<meta name="app-revision" content="${revision}"></head>`);
+await writeFile('dist-demo/index.html',html);
+await writeFile('dist-demo/robots.txt','User-agent: *\nDisallow: /\n');
+const bundle=await readFile('dist-demo/assets/main.js','utf8');
+for(const text of ['/api/state','/api/commands','weekly-field-plan-draft-v1','localStorage','sessionStorage','indexedDB'])if(bundle.includes(text))throw Error('Persistence code in public demo: '+text);
+console.log('PUBLIC_DEMO_BUILD_NO_PERSISTENCE_CODE');

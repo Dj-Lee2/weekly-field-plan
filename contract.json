@@ -1,0 +1,147 @@
+{
+  "public_demo": {
+    "active_host_mode": "public static demo; no authentication",
+    "state": "labeled synthetic examples initialized in memory per page; browser reload resets",
+    "persistence": "no API, localStorage, sessionStorage, cookies or IndexedDB; previous private SQLite preserved but not routed",
+    "privacy": "no actual work data; all mutations are local simulations; connect-src none; no third-party trackers"
+  },
+  "scope": "Public hosted example-only in-memory demo. No authentication, API access, persistent storage, live AI or Kakao connection. Offline/local-server builds remain separate regression-tested modes, not the deployed service.",
+  "design": "Korean practical dashboard, Pretendard, white/neutral/soft muted yellow accent, compact left navigation, central day list, right source/detail panel, >=16px body, no hero or fake analytics, mobile single column. All sample data visibly labeled.",
+  "state": {
+    "schemaVersion": 1,
+    "revision": 0,
+    "members": [],
+    "plans": [],
+    "noWork": [],
+    "snapshots": [],
+    "history": [],
+    "receipts": []
+  },
+  "member": "{id,name}; plain display names in this single-owner prototype, not authenticated Kakao identities",
+  "plan": "{id,week:Monday YYYY-MM-DD,date:YYYY-MM-DD|null,time:string,place:string,task:string,assignees:string[],submitterId:string,notes:string,sourceText:string,reviewed:boolean,cancelled:boolean,createdAt,updatedAt}",
+  "noWork": "{week,memberId,updatedAt}",
+  "snapshot": "{id,week,createdAt,plans:frozen active plans,members:frozen members,noWork:frozen this week,statuses:frozen derived submission statuses,notice:string}",
+  "domain_exports": {
+    "emptyState()": "returns clean state",
+    "monday(dateISO)": "returns Monday of calendar week UTC-date math",
+    "shiftDay(dateISO,days)": "ISO date",
+    "nextWeek(now=new Date())": "next Monday relative to Asia/Seoul",
+    "planIssues(plan)": "string[] Korean missing warnings incl !reviewed; time optional",
+    "weekPlans(state,week,includeCancelled=false)": "sorted plans",
+    "memberStatuses(state,week)": "[{memberId,name,status: submitted|review|none|missing,count}] status driven by submitterId not assignees",
+    "weekChanged(state,week)": "true if current effective week content differs from latest snapshot; false when none",
+    "applyCommand(state,command,context={now:ISO,id:uuid})": "returns NEW state, throws Error(message Korean) with optional .code; never mutate input. Every nonreplay increments revision. command {type,requestId,expectedRevision,...}; receipts idempotent same payload allowed stale rev replay, changed payload conflict. latest content not historical leakage. 2000 plans/100 members/5000 receipts cap; no unbounded histories."
+  },
+  "commands": {
+    "addMember": {
+      "name": "nonblank <=40"
+    },
+    "submit": {
+      "week": "Monday",
+      "submitterId": "member ID",
+      "sourceText": "<=8000",
+      "items": "array 1..30 of {date,time,place,task,assignees,notes,reviewed}; date can null, task required. Server builds metadata."
+    },
+    "editPlan": {
+      "id": "plan id",
+      "patch": "date,time,place,task,assignees,notes,reviewed fields only; no week/submitter/source override"
+    },
+    "cancelPlan": {
+      "id": "plan id",
+      "cancelled": "boolean"
+    },
+    "noWork": {
+      "week": "Monday",
+      "memberId": "member id; cannot if has active submitted plans"
+    },
+    "finalize": {
+      "week": "Monday; rejects no active plans/noWork or ANY planIssues; allows roster missing but notice explicitly names missing"
+    },
+    "loadExample": {
+      "week": "Monday; ONLY pristine empty state. 4 labeled sample members, valid/review/noWork/missing examples. no authentic IDs"
+    },
+    "copyPlans": {
+      "sourceWeek": "Monday",
+      "targetWeek": "exactly sourceWeek +7 calendar days",
+      "planIds": "1..30 unique active source week IDs, no existing target copiedFrom record"
+    }
+  },
+  "parser_exports": {
+    "parseText(text,week)": "returns {items:[{date,time,place,task,assignees,notes,reviewed:false}],warnings:string[],mode:\"rules\"}. Conservative line/pipe/day tokenizer; never call network. Supports weekday followed time place task optional 담당 and notes. Ignore header only; preserve unknowns in notes/warnings; do not silently apply edit/cancel. For no-work return items=[] warnings guiding explicit noWork control. Explicit dates outside selected week error. All outputs user review before submit."
+  },
+  "export_exports": {
+    "makeNotice(state,week)": "Kakao plain text grouped by day; no send; lists missing/none/review; provisional template label",
+    "makeCsv(state,week)": "UTF8 BOM CSV, safe Excel formula cells incl whitespace-leading =+-@, quote escape and newline; columns week,date,time,place,task,assignees,submitter,notes,status; active only",
+    "changeSummary(state,week)": "Korean change summary vs last snapshot including add/change/cancel, none/missing changes"
+  },
+  "api": {
+    "GET /api/state": "full single-owner draft state",
+    "POST /api/commands": "command body; returns {state}; 409 stale/changed receipt,422 validation; body max128KiB, Content-Type JSON, strict host localhost/127.0.0.1:[port], same Origin or absent, no CORS",
+    "GET /api/health": "{ok:true,mode:\"local-draft\",kakaoConnected:false,aiConnected:false}",
+    "static": "serve dist with exact asset path; traversal blocked; / redirects SPA; no filesystem exposure"
+  },
+  "server": "createServer({dbPath,staticDir,publicOrigin?}); main env PORT default8788, HOST only127.0.0.1; DATA_DIR ./runtime. Optional PUBLIC_ORIGIN exact HTTPS origin adds one Host, public POST requires same Origin. Never trust X-Forwarded headers. SQLite single-row transaction and receipts. Hosted mode REQUIRES authenticating reverse proxy on every route; Docker uses host networking but application remains loopback-only.",
+  "files_backend": [
+    "lib/domain.mjs",
+    "lib/parser.mjs",
+    "lib/exports.mjs",
+    "server.mjs",
+    "tests/domain.test.mjs",
+    "tests/parser.test.mjs",
+    "tests/server.test.mjs"
+  ],
+  "files_parent": [
+    "src/*",
+    "public/*",
+    "scripts/*",
+    "package.json",
+    "index.html",
+    "START-HERE.html",
+    ".gitignore"
+  ],
+  "boundary": "Public host serves exact static allowlist with GET/HEAD only and connect-src none. Prior SQLite database retained privately and backend stopped. Other services on the same host unchanged.",
+  "acceptance": [
+    "parse preview saves editable real data",
+    "week isolation",
+    "cancel restore",
+    "no-work vs missing",
+    "source history",
+    "freeze snapshot and changed notice",
+    "csv safety",
+    "API persist restart",
+    "revision conflict and dedupe",
+    "malformed atomicity",
+    "desktop mobile browser",
+    "offline HTML localStorage fallback warning if storage fails",
+    "calendar search and compounded person/place filters",
+    "conservative interval conflicts and actual missing-field reminders",
+    "copy preview cancel/confirm/source integrity/mandatory re-review/idempotency",
+    "memory-only zero API/third-party/storage calls",
+    "guarded static symlink release rollback without reverse-proxy or database writes",
+    "month navigation leap/year and per-date drilldown",
+    "result create/edit/cancel/frozen plan snapshot/audit/CSV",
+    "result-only display does not count past unrecorded plan as completion"
+  ],
+  "build": "React19 + direct esbuild bundle; Vite build hung in this environment, removed rather than shipped. Scoped CSS, bundled Pretendard + OFL. No external runtime requests in offline HTML.",
+  "retention_limits": {
+    "history": 1000,
+    "snapshots": 100,
+    "receipts": 5000,
+    "on_cap": "reject mutation atomically, never silently prune previous records"
+  },
+  "planning_tools": {
+    "calendar": "Seven dates plus undated section; list/calendar share search, assignee, place, status filters; week change resets search/person/place",
+    "checks": "Active same-week same-date exact trimmed person/place; two explicit valid HH:mm ranges only yield definite interval overlap. Unknown or coarse times yield advisory check. Shared work is not automatically changed. 200 visible pairs bounded with true total count. No weather/equipment assignment.",
+    "reminders": "Separate missing/review submitter-driven plain text with user-entered optional deadline. No invented deadline, send or recipient selection.",
+    "copy": "Selected active plans (1..30) to exactly following week, atomic, source intact, new IDs, reviewed=false, provenance metadata and original source retained; no snapshots/no-work copied, duplicates including cancelled copy rejected."
+  },
+  "work_calendar": {
+    "route": "#/calendar; existing weekly plan remains intact",
+    "reference": "jiwonmoa date heatmap, observed white radius24 card, Pretendard title20, pill toggles, 7x6 blue tiles; counts not decorative",
+    "result": "optional plan.result separate from plan approval; status done/partial/not-done; required actual/assessment date<=KST today, summary and recorder; first planSnapshot preserved; recordResult audits before/after; result changes do not mark finalized plan changed",
+    "date_semantics": "plan date and actual/assessment date separate, same-date combined once; results retained if plan cancelled, unscheduled plans separate; do not auto-complete past tasks",
+    "history_fixture": "explicit action only, synthetic historical examples; no production or user history imported",
+    "filters": "query/person/place/status and all/plans/results projections apply to month counts, tiles, detail list, result summary and month CSV",
+    "persistence": "public demo unchanged: memory-only page state; new results lost on reload; offline and local server modes retain existing storage contracts"
+  }
+}

@@ -1,0 +1,18 @@
+node_modules/
+dist/
+dist-demo/
+runtime/
+artifacts/
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-*
+*.log
+__pycache__/
+*.pyc
+# 개인정보·운영 정보
+*.private
+private/
+*개인정보*
+*연락처*

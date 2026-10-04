@@ -1,0 +1,50 @@
+/* Planning tools reuse the existing restrained working dashboard. */
+.feature-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 18px;flex-wrap:wrap}
+.feature-toolbar .segmented button,.reminder-controls .segmented button{min-height:40px;font-size:13px}
+.plan-filters{display:grid;grid-template-columns:minmax(160px,1.6fr) minmax(120px,1fr) minmax(120px,1fr);gap:12px;padding:17px 0 12px;border-top:1px solid var(--line)}
+.plan-filters label{min-width:0;font-size:13px;color:#656c5b}
+.plan-filters select,.plan-filters input{width:100%;font-size:14px}
+.filter-result{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;min-height:34px;font-size:12px;color:var(--muted)}
+.check-link{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #e9e3c8;background:#fbf9ef;border-radius:9px;padding:12px 15px;margin-bottom:18px;font-size:13px;color:#75652d}
+.check-link span{min-width:0;overflow-wrap:anywhere}
+.check-link b{font-weight:650}
+.workspace-grid.calendar-mode{grid-template-columns:minmax(0,1fr)}
+.calendar-mode .context-panel{max-width:760px;width:100%;margin-top:8px}
+.calendar-mode .context-panel:not(:has(.source-block)){display:none}
+.week-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);border-radius:12px;overflow:hidden;min-height:300px}
+.calendar-day{min-width:0;border-right:1px solid var(--line);background:#fff}
+.calendar-day:last-child{border-right:0}
+.calendar-day header{padding:14px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:5px;background:#f8f9f4;flex-wrap:wrap}
+.calendar-day h2{font-size:14px;letter-spacing:0}.calendar-day h2 span{color:var(--muted);font-size:12px;font-weight:450;margin-left:3px}
+.calendar-day header>span{font-size:11px;color:var(--muted)}
+.calendar-day.weekend header{background:#faf9f4}
+.calendar-day>div{padding:8px}
+.calendar-empty{padding:18px 2px;font-size:12px;color:#969b8c;text-align:center}
+.calendar-item{display:flex;flex-direction:column;align-items:flex-start;gap:5px;width:100%;text-align:left;padding:12px 9px;background:#f6f7f0;border:1px solid #e5e8db;border-radius:8px;margin-bottom:8px;overflow-wrap:anywhere;min-height:44px}
+.calendar-item:hover,.calendar-item.chosen{background:#eeeedc;border-color:#b5b280}
+.calendar-item strong{font-size:14px;line-height:1.5;font-weight:650}
+.calendar-item>span{font-size:11px;color:#7b836d}.calendar-item .calendar-time{font-size:12px;color:#5f674f;font-weight:600}
+.calendar-item .badge{margin-top:4px}.calendar-item.is-cancelled{opacity:.55;text-decoration:line-through}
+.undated-plans{margin-top:22px;padding:20px;border:1px dashed #c9c9b7;border-radius:10px}
+.undated-plans h2{font-size:17px}.undated-plans>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.checks-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:24px;margin-top:24px;align-items:start}
+.checks-layout .section-head{align-items:flex-start;flex-wrap:wrap}
+.check-explainer{display:flex;gap:9px;padding:0 24px 20px;color:#7a806c;font-size:12px;align-items:flex-start}
+.check-counts{display:flex;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);padding:16px 24px;font-size:13px}.check-counts span{color:var(--muted)}
+.conflict-list{padding:0 24px}.conflict-row{padding:20px 0;border-top:1px solid var(--line)}
+.conflict-row h3{font-size:15px;overflow-wrap:anywhere}.conflict-row>p{font-size:12px;color:var(--muted);margin:8px 0 12px}
+.badge.conflict{background:#faeae2;color:#9b5039}
+.conflict-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.compare-plan{display:flex;flex-direction:column;text-align:left;gap:6px;padding:14px;background:#fafbf7;border:1px solid var(--line);border-radius:9px;min-width:0;overflow-wrap:anywhere}
+.compare-plan:hover{background:#f1f3e9}.compare-plan>span{font-size:12px;color:#7e876e}.compare-plan strong{font-size:15px}.compare-plan .text-link{margin-top:5px;color:#5c664d}
+.more-checks{margin:0 24px 20px}
+.issue-link{display:flex;flex-direction:column;gap:7px;text-align:left;border-top:1px solid var(--line);padding:13px 0;width:100%;overflow-wrap:anywhere;min-height:44px}.issue-link strong{font-size:14px;font-weight:600}.issue-link span{font-size:12px;color:#929074}.issue-link:hover strong{text-decoration:underline}
+.reminder-panel{margin-top:24px}.reminder-controls{display:flex;align-items:end;gap:18px;justify-content:space-between;padding:0 24px 18px;flex-wrap:wrap}.reminder-controls label{min-width:200px;max-width:340px;flex:1;font-size:13px}.reminder-controls input{font-size:14px}.reminder-text{min-height:260px}
+.copy-select-head{margin:18px 0 10px;font-size:13px}.copy-list{border-top:1px solid var(--line)}
+.copy-choice{display:flex;flex-direction:row;align-items:flex-start;gap:12px;padding:15px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.copy-choice input{width:19px;height:19px;min-height:19px;margin:5px 0 0;accent-color:#777a45;flex-shrink:0}
+.copy-choice>span{min-width:0}.copy-choice strong{display:block;font-size:15px;overflow-wrap:anywhere}.copy-choice small{display:block;margin-top:4px;color:#8a8f7d;font-size:12px;font-weight:400;overflow-wrap:anywhere}
+.copy-choice.unavailable{opacity:.6}.copy-guidance{margin-top:17px}
+@media(max-width:1180px){.week-calendar{grid-template-columns:repeat(4,minmax(0,1fr))}.calendar-day{border-bottom:1px solid var(--line)}.calendar-day:nth-child(4){border-right:0}.calendar-day:nth-child(n+5){border-bottom:0}.checks-layout{grid-template-columns:minmax(0,1fr) 240px}}
+@media(max-width:960px){.checks-layout{grid-template-columns:minmax(0,1fr)}.checks-layout .notice-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.plan-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.plan-filters .search-field{grid-column:1/-1}.week-calendar{grid-template-columns:repeat(3,minmax(0,1fr))}.calendar-day:nth-child(4){border-right:1px solid var(--line)}.calendar-day:nth-child(n+5){border-bottom:1px solid var(--line)}.calendar-day:nth-child(3n){border-right:0}.calendar-day:last-child{border-bottom:0}}
+@media(max-width:700px){.sidebar nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}.nav-item{font-size:12px;padding:8px 6px;border-radius:7px;min-height:44px}.sidebar{padding-bottom:10px}.week-toolbar{flex-wrap:wrap}.feature-toolbar .button{font-size:12px}.plan-filters input,.plan-filters select,.reminder-controls input{font-size:16px}.feature-toolbar{margin-bottom:12px}.week-calendar{display:block;min-height:0}.calendar-day,.calendar-day:nth-child(4){border-right:0;border-bottom:1px solid var(--line)}.calendar-day:last-child{border-bottom:0}.calendar-day header{padding:12px 14px}.calendar-day>div{padding:10px 12px}.calendar-empty{text-align:left;padding:6px 0}.calendar-item{padding:13px;margin-bottom:9px}.calendar-item strong{font-size:16px}.calendar-item>span{font-size:13px}.calendar-item .calendar-time{font-size:13px}.undated-plans>div{grid-template-columns:minmax(0,1fr)}.checks-layout .notice-actions{display:flex}.conflict-list{padding:0 17px}.conflict-pair{grid-template-columns:minmax(0,1fr)}.check-counts{padding:14px 17px}.check-explainer{padding:0 17px 16px}.reminder-controls{padding:0 17px 16px;align-items:stretch}.reminder-controls label{min-width:0;width:100%;max-width:none;flex-basis:100%}.reminder-panel .section-foot{align-items:stretch}.reminder-panel .section-foot>.row{justify-content:flex-end;width:100%}.copy-select-head{align-items:flex-start}.check-link{font-size:12px}.copy-choice{padding:17px 0}.copy-choice input{width:22px;height:22px;min-height:22px}.button,.icon-button,.text-button,.segmented button{min-height:44px}.week-selector .icon-button{width:32px}.week-picker{font-size:18px}}

@@ -1,0 +1,28 @@
+services:
+  app:
+    image: ${FIELD_IMAGE:?exact image required}
+    container_name: weekly-field-plan
+    network_mode: host
+    user: "1000:1000"
+    read_only: true
+    restart: unless-stopped
+    init: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 80
+    mem_limit: 256m
+    cpus: 0.50
+    environment:
+      HOST: "127.0.0.1"
+      PORT: "8798"
+      DATA_DIR: /data
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?exact https origin required}
+    volumes:
+      - ${FIELD_DATA_DIR:?absolute data directory required}:/data
+    tmpfs:
+      - /tmp:size=16m,mode=1777,noexec,nosuid
+    logging:
+      driver: json-file
+      options:
+        max-size: "2m"
+        max-file: "2"
